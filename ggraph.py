@@ -18,6 +18,10 @@ class GGraph(object):
         self.edge_p = edge_p
         self.neighbor_list = defaultdict(list)
         self.edge_list = []
+        # create n nodes, connected randomly
+        self.nodes = ['n'+str(i) for i in range(1, self.n+1)]
+
+
     def new(self):
         """
         Using the setting specified in the initialization of this GGraph, recompute the graph
@@ -33,11 +37,9 @@ class GGraph(object):
 
         Creates the base graph, handling all the probability and checking for connectivity
         """
-        # create n nodes, connected randomly
-        nodes = ['n'+str(i) for i in range(1, self.n+1)]
 
         # create list of all possible non-self-looping edges in the graph
-        possible_edges = itertools.combinations(nodes, 2)
+        possible_edges = itertools.combinations(self.nodes, 2)
 
         # create random graph
         for edge in possible_edges:
@@ -51,11 +53,11 @@ class GGraph(object):
         # connect any unconnected nodes
         for node in self.neighbor_list.keys():
             if len(self.neighbor_list[node]) == 0:
-                new_neighbor = random.choice(filter(lambda x: x!=node, nodes))
+                new_neighbor = random.choice(filter(lambda x: x!=node, self.nodes))
                 self.neighbor_list[node].append(new_neighbor)
                 self.neighbor_list[new_neighbor].append(node)
                 self.edge_list.append((node,new_neighbor))
-
+    
     def _classify(self):
         """
         You shouldn't need to call this method.  
