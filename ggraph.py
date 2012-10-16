@@ -47,7 +47,7 @@ class GGraph(object):
         for edge in possible_edges:
             a,b = edge
             # randomly assign edges
-            if (random.random() > self.edge_p):
+            if (random.random() < self.edge_p):
                 self.neighbor_list[a].append(b)
                 self.neighbor_list[b].append(a)
                 self.edge_list.append((a,b))
