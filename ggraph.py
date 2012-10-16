@@ -3,20 +3,6 @@ import random
 import itertools
 from collections import defaultdict
 
-try:
-    import networkx
-except ImportError:
-    print "Please install networkx via 'easy_install networkx', 'pip install networkx' or some other method."
-    print "You will not have access to the full functionality of this module until then"
-    sys.exit(0)
-
-try:
-    import matplotlib.pyplot as plt
-except ImportError:
-    print "Please install matplotlib via 'easy_install matplotlib', 'pip install matplotlib' or some other method."
-    print "You will not have access to the full functionality of this module until then"
-    sys.exit(0)
-
 class GGraph(object):
     """
     Class encapsulating the necessary functionality for creating arbitrarily-sized, undirected, connected
@@ -65,6 +51,20 @@ class GGraph(object):
         Uses the networkx/matplotlib.pyplot modules to graphically show what network
         was created. Nodes should have labels. Shows the resultant graph in a temporary window.
         """
+        try:
+            import networkx
+        except ImportError:
+            print "Please install networkx via 'easy_install networkx', 'pip install networkx' or some other method."
+            print "You will not have access to the full functionality of this module until then"
+            sys.exit(0)
+
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            print "Please install matplotlib via 'easy_install matplotlib', 'pip install matplotlib' or some other method."
+            print "You will not have access to the full functionality of this module until then"
+            sys.exit(0)
+
         string_edges = map(lambda x: "%s %s" % (x[0], x[1]), self.edge_list)
         graph = networkx.parse_edgelist(string_edges)
         networkx.draw_circular(graph,prog='neato',width=1,node_size=300,font_size=14,overlap='scalexy')
