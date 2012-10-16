@@ -50,6 +50,20 @@ class GGraph(object):
                 self.edge_list.append((node,new_neighbor))
 
     def _classify(self):
+        """
+        You shouldn't need to call this method.  
+
+        For each node N in the graph, classify it as a switch (sN) or as a host
+        (hN) (keeping in mind that hosts cannot forward packets), using the
+        following algorithm:
+
+        Firstly, create a minimum spanning tree M of the graph created above.
+        Then, for each node N in M, if all edges in G with an endpoint of N are
+        also in M, then N *must* be a switch because it consists the paths
+        connect other nodes that are potentially hosts. Otherwise, node N can
+        either be a host or a switch (though we do enforce that there must be a
+        minimum of two hosts in the network)
+        """
         pass
     
     def show(self):
