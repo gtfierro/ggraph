@@ -18,6 +18,13 @@ class GGraph(object):
         self.edge_p = edge_p
         self.neighbor_list = defaultdict(list)
         self.edge_list = []
+    def new(self):
+        """
+        Using the setting specified in the initialization of this GGraph, recompute the graph
+        (potentially creating a new random version) and return an instance.
+        """
+        self._make_network()
+        pass
 
 
     def _make_network(self):
