@@ -40,7 +40,7 @@ class Kruskal(object):
                 self.mst.append(edge)
         return self.mst
     
-    def show(self):
+    def show(self,filename=''):
         try:
             import networkx
         except ImportError:
@@ -58,4 +58,7 @@ class Kruskal(object):
         string_edges = map(lambda x: "%s %s" % (x[0], x[1]), self.mst)
         graph = networkx.parse_edgelist(string_edges)
         networkx.draw_circular(graph,prog='neato',width=1,node_size=300,font_size=14,overlap='scalexy')
-        plt.show()
+        if filename:
+            plt.savefig(filename)
+        else:
+            plt.show()

@@ -80,10 +80,11 @@ class GGraph(object):
         mst_edges = k.run()
         k.show('2.png')
     
-    def show(self):
+    def show(self, filename=''):
         """
         Uses the networkx/matplotlib.pyplot modules to graphically show what network
         was created. Nodes should have labels. Shows the resultant graph in a temporary window.
+        If [filename] is provided, instead saves result in [filename]
         """
         try:
             import networkx
@@ -102,7 +103,10 @@ class GGraph(object):
         string_edges = map(lambda x: "%s %s" % (x[0], x[1]), self.edge_list)
         graph = networkx.parse_edgelist(string_edges)
         networkx.draw_circular(graph,prog='neato',width=1,node_size=300,font_size=14,overlap='scalexy')
-        plt.show()
+        if filename:
+            plt.savefig(filename)
+        else:
+            plt.show()
 
 
     def _is_leaf(self,node):
