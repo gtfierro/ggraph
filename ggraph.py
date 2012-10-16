@@ -18,7 +18,16 @@ except ImportError:
     sys.exit(0)
 
 class GGraph(object):
+    """
+    Class encapsulating the necessary functionality for creating arbitrarily-sized, undirected, connected
+    networks.
+    """
     def __init__(self, n=3, edge_p=.2):
+        """
+        [n]: int representing the number of nodes in the graph
+        [edge_p]: the probability that a given edge exists (the lower you make this number,
+                  the fewer edges you are likely to have in the resultant graph)
+        """
         self.n = n
         self.edge_p = edge_p
         self.neighbor_list = defaultdict(list)
@@ -26,6 +35,11 @@ class GGraph(object):
 
 
     def _make_network(self):
+        """
+        You shouldn't need to call this method.
+
+        Creates the base graph, handling all the probability and checking for connectivity
+        """
         # create n nodes, connected randomly
         nodes = ['n'+str(i) for i in range(1, self.n+1)]
 
@@ -47,6 +61,10 @@ class GGraph(object):
                 self.neighbor_list[node].append(random.choice(filter(lambda x: x!=node, nodes)))
     
     def show(self):
+        """
+        Uses the networkx/matplotlib.pyplot modules to graphically show what network
+        was created. Nodes should have labels. Shows the resultant graph in a temporary window.
+        """
         string_edges = map(lambda x: "%s %s" % (x[0], x[1]), self.edge_list)
         graph = networkx.parse_edgelist(string_edges)
         networkx.draw_circular(graph,prog='neato',width=1,node_size=300,font_size=14,overlap='scalexy')
