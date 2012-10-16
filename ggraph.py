@@ -3,6 +3,8 @@ import random
 import itertools
 from collections import defaultdict
 
+import kruskal
+
 class GGraph(object):
     """
     Class encapsulating the necessary functionality for creating arbitrarily-sized, undirected, connected
@@ -73,7 +75,10 @@ class GGraph(object):
         either be a host or a switch (though we do enforce that there must be a
         minimum of two hosts in the network)
         """
-        pass
+
+        k = kruskal.Kruskal(self.nodes, self.edge_list)
+        mst_edges = k.run()
+        k.show('2.png')
     
     def show(self):
         """
