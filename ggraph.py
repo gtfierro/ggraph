@@ -6,14 +6,14 @@ from collections import defaultdict
 try:
     import networkx
 except ImportError:
-    print "Please install networkx via 'easy_install networkx', 'pip install networkx' or via some other method."
+    print "Please install networkx via 'easy_install networkx', 'pip install networkx' or some other method."
     print "You will not have access to the full functionality of this module until then"
     sys.exit(0)
 
 try:
     import matplotlib.pyplot as plt
 except ImportError:
-    print "Please install matplotlib via 'easy_install matplotlib', 'pip install matplotlib' or via some other method."
+    print "Please install matplotlib via 'easy_install matplotlib', 'pip install matplotlib' or some other method."
     print "You will not have access to the full functionality of this module until then"
     sys.exit(0)
 
