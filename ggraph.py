@@ -44,7 +44,13 @@ class GGraph(object):
         # connect any unconnected nodes
         for node in self.neighbor_list.keys():
             if len(self.neighbor_list[node]) == 0:
-                self.neighbor_list[node].append(random.choice(filter(lambda x: x!=node, nodes)))
+                new_neighbor = random.choice(filter(lambda x: x!=node, nodes))
+                self.neighbor_list[node].append(new_neighbor)
+                self.neighbor_list[new_neighbor].append(node)
+                self.edge_list.append((node,new_neighbor))
+
+    def _classify(self):
+        pass
     
     def show(self):
         """
