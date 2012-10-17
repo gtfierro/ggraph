@@ -1,6 +1,7 @@
 import sys
 import random
 import itertools
+import pickle
 from collections import defaultdict
 from collections import deque
 
@@ -24,6 +25,11 @@ class GGraph(object):
         # create n nodes, connected randomly
         self.nodes = ['s'+str(i) for i in range(1, self.n+1)]
 
+    def save(self, filename):
+        pickle.dump(self.edge_list, open(filename,'wb'))
+
+    def load(self, filename):
+        self.edge_list = pickle.load(open(filename, 'r'))
 
     def new_instance(self):
         """
