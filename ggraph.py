@@ -24,7 +24,7 @@ class GGraph(object):
         self.neighbor_list = defaultdict(list)
         self.edge_list = []
         # create n nodes, connected randomly
-        self.nodes = ['n'+str(i) for i in range(1, self.n+1)]
+        self.nodes = ['s'+str(i) for i in range(1, self.n+1)]
 
 
     def new_instance(self):
@@ -32,8 +32,7 @@ class GGraph(object):
         Using the setting specified in the initialization of this GGraph, recompute the graph
         (potentially creating a new random version) and return an instance.
         """
-        self._make_network()
-        return self._classify()
+        return self._make_network()
 
     def _get_edges(self,node,edge_list):
         """
@@ -56,7 +55,6 @@ class GGraph(object):
         return a list of the nodes visited via DFS
         """
         first = random.choice(nodes)
-        print "Starting from",first
         tovisit = deque()
         visited = []
         for neighbor in neighbor_list[first]:
@@ -65,9 +63,9 @@ class GGraph(object):
             current = tovisit.pop()
             if current not in visited:
                 visited.append(current)
-            for neighbor in filter(lambda x: x not in visited, neighbor_list[current]):
-                tovisit.appendleft(neighbor)
-        print "Visited",visited
+            for neighbor in neighbor_list[current]:
+              if neighbor not in visited and neighbor not in tovisit:
+                    tovisit.appendleft(neighbor)
         return visited
 
     def _make_network(self):
@@ -119,60 +117,28 @@ class GGraph(object):
                 orphaned_connected_components.append(list(excluded_orphans))
         
         # for each orphan, add it to a random node in another connected component
-        if not orphaned_connected_components:
-            return
         for cc in orphaned_connected_components:
             unfortunate_neighbor = random.choice(visited)
             lucky_orphan = random.choice(cc)
             self.neighbor_list[unfortunate_neighbor].append(lucky_orphan)
             self.neighbor_list[lucky_orphan].append(unfortunate_neighbor)
             self.edge_list.append((unfortunate_neighbor,lucky_orphan))
-
-    def _classify(self):
-        """
-        You shouldn't need to call this method.  
-
-        For each node N in the graph, classify it as a switch (sN) or as a host
-        (hN) (keeping in mind that hosts cannot forward packets), using the
-        following algorithm:
-
-        Firstly, create a minimum spanning tree M of the graph created above.
-        Then, for each node N in M, if all edges in G with an endpoint of N are
-        also in M, then N *must* be a switch because it consists the paths
-        connect other nodes that are potentially hosts. Otherwise, node N can
-        either be a host or a switch (though we do enforce that there must be a
-        minimum of two hosts in the network)
-        """
-        new_nodes = {}
-        new_edge_list = []
-        k = kruskal.Kruskal(self.nodes, self.edge_list)
-        mst_edges = k.run()
-        cur_nodes = self.nodes
-        random.shuffle(cur_nodes)
-        for node in cur_nodes:
-            node_graph_edges = self._get_edges(node,self.edge_list)
-            node_mst_edges = self._get_edges(node,mst_edges)
-            # if the set of edges in G is the same as those in M for 
-            # a given node, then we set that node to be a switch.
-            # else, with probability [host_p] we set it to be a host (default is switch)
-            if self._edge_set_equal(node_graph_edges, node_mst_edges):
-                new_nodes[node[1:]] = 's'
-            else:
-                if len(filter(lambda x: x.startswith('h'), new_nodes.values())) >= 2:
-                    new_nodes[node[1:]] = 'h' if random.random() < self.host_p else 's'
-                else:
-                    new_nodes[node[1:]] = 'h'
         
-        # map the new names onto the old edge_list
-        for pair in self.edge_list:
-            new_pair = map(lambda x: new_nodes[x[1:]] + x[1:], pair)
-            new_edge_list.append(new_pair)
+        # add minimum of 2 hosts
+        for i in range(1,3):
+            rand_node = random.choice(self.nodes)
+            self.neighbor_list[rand_node].append('h'+str(i))
+            self.edge_list.append((rand_node,'h'+str(i)))
+        host_num = 3
+        for i in range(len(self.nodes)):
+            if random.random() < self.host_p:
+                rand_node = random.choice(self.nodes)
+                self.neighbor_list[rand_node].append('h'+str(host_num))
+                self.edge_list.append((rand_node,'h'+str(host_num)))
+                host_num += 1
         
-        # clean up -- no connected hosts
-        new_edge_list = filter(lambda x: not (x[0][:1] == x[1][:1] == 'h'), new_edge_list)
- 
+        return self.edge_list
 
-        return new_edge_list
 
     def show(self, filename=''):
         """
@@ -207,7 +173,7 @@ class GGraph(object):
         """
         Returns True if node [node] is a leaf
         """
-        return len(self.neighbor_list[node]) <= 1
+        return len(self.neighbor_list[node]) == 1
 
     def _check_path(self,node):
         """
