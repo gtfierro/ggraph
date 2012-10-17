@@ -48,8 +48,7 @@ class GGraph(object):
         """
         el1_set = map(lambda x: set(x), el1)
         el2_set = map(lambda x: set(x), el2)
-        return all([i for i in el1_set if i in el2_set]) and \
-               all([i for i in el2_set if i in el1_set])
+        return list(itertools.takewhile(lambda x: x in el1_set, el2_set)) == el1_set
     
     def _get_visited(self, nodes, neighbor_list):
         """
@@ -57,15 +56,18 @@ class GGraph(object):
         return a list of the nodes visited via DFS
         """
         first = random.choice(nodes)
+        print "Starting from",first
         tovisit = deque()
         visited = []
         for neighbor in neighbor_list[first]:
             tovisit.appendleft(neighbor)
         while tovisit:
             current = tovisit.pop()
-            visited.append(current)
+            if current not in visited:
+                visited.append(current)
             for neighbor in filter(lambda x: x not in visited, neighbor_list[current]):
                 tovisit.appendleft(neighbor)
+        print "Visited",visited
         return visited
 
     def _make_network(self):
@@ -101,7 +103,9 @@ class GGraph(object):
         orphaned_connected_components = []
 
         # do DFS from a random node, keep track of the nodes we visit
-        visited = self._get_visited(self.nodes, self.neighbor_list)
+        visited = None
+        while not visited:
+            visited = self._get_visited(self.nodes, self.neighbor_list)
         orphaned_nodes = set(self.nodes) - set(visited)
 
         hopeful_orphans = []
@@ -115,6 +119,8 @@ class GGraph(object):
                 orphaned_connected_components.append(list(excluded_orphans))
         
         # for each orphan, add it to a random node in another connected component
+        if not orphaned_connected_components:
+            return
         for cc in orphaned_connected_components:
             unfortunate_neighbor = random.choice(visited)
             lucky_orphan = random.choice(cc)
@@ -150,7 +156,7 @@ class GGraph(object):
             if self._edge_set_equal(graph_edges, mst_edges):
                 new_nodes[node[1:]] = 's'
             else:
-                new_nodes[node[1:]] = 'h' if random.random > self.host_p else 's'
+                new_nodes[node[1:]] = 'h' if random.random() < self.host_p else 's'
         
         # map the new names onto the old edge_list
         for pair in self.edge_list:
