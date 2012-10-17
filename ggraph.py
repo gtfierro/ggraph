@@ -114,7 +114,8 @@ class GGraph(object):
                 hopeful_orphans.extend(visited_orphans)
                 excluded_orphans = set(orphaned_nodes) - set(visited_orphans)
                 orphaned_connected_components.append(list(excluded_orphans))
-
+        
+        # for each orphan, add it to a random node in another connected component
         for cc in orphaned_connected_components:
             unfortunate_neighbor = random.choice(visited)
             lucky_orphan = random.choice(cc)
