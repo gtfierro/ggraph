@@ -91,14 +91,14 @@ class GGraph(object):
         except ImportError:
             print "Please install networkx via 'easy_install networkx', 'pip install networkx' or some other method."
             print "You will not have access to the full functionality of this module until then"
-            sys.exit(0)
+            sys.exit(1)
 
         try:
             import matplotlib.pyplot as plt
         except ImportError:
             print "Please install matplotlib via 'easy_install matplotlib', 'pip install matplotlib' or some other method."
             print "You will not have access to the full functionality of this module until then"
-            sys.exit(0)
+            sys.exit(1)
 
         string_edges = map(lambda x: "%s %s" % (x[0], x[1]), self.edge_list)
         graph = networkx.parse_edgelist(string_edges)
