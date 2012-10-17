@@ -33,8 +33,7 @@ class GGraph(object):
         (potentially creating a new random version) and return an instance.
         """
         self._make_network()
-        self._classify()
-        return self.edge_list
+        return self._classify()
 
     def _get_edges(self,node,edge_list):
         """
