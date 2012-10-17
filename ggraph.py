@@ -36,11 +36,21 @@ class GGraph(object):
         self._classify()
         return self.edge_list
 
-    def _get_edges(self,node):
+    def _get_edges(self,node,edge_list):
         """
         Return a list of all edges that involve [node]
         """
-        return filter(lambda x: node in x, self.edge_list)
+        return filter(lambda x: node in x, edge_list)
+    
+    def _edge_set_equal(self, el1, el2):
+        """
+        Given two lists of edges (formatted [ ('n1','n2'), ...., ('n4','n10') ]),
+        return True if the lists of edges are equivalent (accounting for reordering)
+        """
+        el1_set = map(lambda x: set(x), el1)
+        el2_set = map(lambda x: set(x), el2)
+        return all([i for i in el1_set if i in el2_set]) and \
+               all([i for i in el2_set if i in el1_set])
     
     def _get_visited(self, nodes, neighbor_list):
         """
