@@ -150,12 +150,12 @@ class GGraph(object):
         cur_nodes = self.nodes
         random.shuffle(cur_nodes)
         for node in cur_nodes:
-            graph_edges = self._get_edges(node,self.edge_list)
-            mst_edges = self._get_edges(node,mst_edges)
+            node_graph_edges = self._get_edges(node,self.edge_list)
+            node_mst_edges = self._get_edges(node,mst_edges)
             # if the set of edges in G is the same as those in M for 
             # a given node, then we set that node to be a switch.
             # else, with probability [host_p] we set it to be a host (default is switch)
-            if self._edge_set_equal(graph_edges, mst_edges):
+            if self._edge_set_equal(node_graph_edges, node_mst_edges):
                 new_nodes[node[1:]] = 's'
             else:
                 if len(filter(lambda x: x.startswith('h'), new_nodes.values())) >= 2:
