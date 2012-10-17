@@ -27,7 +27,7 @@ class GGraph(object):
         self.nodes = ['n'+str(i) for i in range(1, self.n+1)]
 
 
-    def new(self):
+    def new_instance(self):
         """
         Using the setting specified in the initialization of this GGraph, recompute the graph
         (potentially creating a new random version) and return an instance.
