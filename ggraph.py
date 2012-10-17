@@ -61,14 +61,13 @@ class GGraph(object):
         first = random.choice(nodes)
         tovisit = deque()
         visited = []
-        for neighbor in neighbor_list[first]:
-            tovisit.appendleft(neighbor)
+        tovisit.appendleft(first)
         while tovisit:
             current = tovisit.pop()
             if current not in visited:
                 visited.append(current)
             for neighbor in neighbor_list[current]:
-              if neighbor not in visited and neighbor not in tovisit:
+                if neighbor not in visited and neighbor not in tovisit:
                     tovisit.appendleft(neighbor)
         return visited
 
@@ -92,7 +91,7 @@ class GGraph(object):
                 self.edge_list.append((a,b))
 
         # connect any unconnected nodes
-        for node in self.neighbor_list.keys():
+        for node in self.nodes:
             if len(self.neighbor_list[node]) == 0:
                 new_neighbor = random.choice(filter(lambda x: x!=node, self.nodes))
                 self.neighbor_list[node].append(new_neighbor)
@@ -105,9 +104,7 @@ class GGraph(object):
         orphaned_connected_components = []
 
         # do DFS from a random node, keep track of the nodes we visit
-        visited = None
-        while not visited:
-            visited = self._get_visited(self.nodes, self.neighbor_list)
+        visited = self._get_visited(self.nodes, self.neighbor_list)
         orphaned_nodes = set(self.nodes) - set(visited)
 
         hopeful_orphans = []
@@ -117,16 +114,19 @@ class GGraph(object):
             if node not in hopeful_orphans:
                 visited_orphans = self._get_visited(list(orphaned_nodes), self.neighbor_list)
                 hopeful_orphans.extend(visited_orphans)
-                excluded_orphans = set(orphaned_nodes) - set(visited_orphans)
-                orphaned_connected_components.append(list(excluded_orphans))
-        
+                if visited_orphans:
+                    orphaned_connected_components.append(list(visited_orphans))
+
+        print orphaned_connected_components
+
         # for each orphan, add it to a random node in another connected component
-        for cc in orphaned_connected_components:
-            unfortunate_neighbor = random.choice(visited)
-            lucky_orphan = random.choice(cc)
-            self.neighbor_list[unfortunate_neighbor].append(lucky_orphan)
-            self.neighbor_list[lucky_orphan].append(unfortunate_neighbor)
-            self.edge_list.append((unfortunate_neighbor,lucky_orphan))
+        if orphaned_connected_components:
+            for cc in orphaned_connected_components:
+                unfortunate_neighbor = random.choice(visited)
+                lucky_orphan = random.choice(cc)
+                self.neighbor_list[unfortunate_neighbor].append(lucky_orphan)
+                self.neighbor_list[lucky_orphan].append(unfortunate_neighbor)
+                self.edge_list.append((unfortunate_neighbor,lucky_orphan))
         
         # add minimum of 2 hosts
         for i in range(1,3):
