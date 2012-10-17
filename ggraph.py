@@ -11,14 +11,16 @@ class GGraph(object):
     Class encapsulating the necessary functionality for creating arbitrarily-sized, undirected, connected
     networks.
     """
-    def __init__(self, n=3, edge_p=.2):
+    def __init__(self, n=3, edge_p=.2, host_p=.5):
         """
         [n]: int representing the number of nodes in the graph
         [edge_p]: the probability that a given edge exists (the lower you make this number,
                   the fewer edges you are likely to have in the resultant graph)
+        [host_p]: the probability that a given node is a host (defaults to switch)
         """
         self.n = n
         self.edge_p = edge_p
+        self.host_p = host_p
         self.neighbor_list = defaultdict(list)
         self.edge_list = []
         # create n nodes, connected randomly
