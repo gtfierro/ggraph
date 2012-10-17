@@ -83,7 +83,33 @@ class GGraph(object):
                 self.neighbor_list[node].append(new_neighbor)
                 self.neighbor_list[new_neighbor].append(node)
                 self.edge_list.append((node,new_neighbor))
-    
+        
+        # at this point, all nodes are in connected components, but these
+        # components might not be connected
+
+        orphaned_connected_components = []
+
+        # do DFS from a random node, keep track of the nodes we visit
+        visited = self._get_visited(self.nodes, self.neighbor_list)
+        orphaned_nodes = set(self.nodes) - set(visited)
+
+        hopeful_orphans = []
+
+        # each orphaned node should be part of a connected component
+        for node in orphaned_nodes:
+            if node not in hopeful_orphans:
+                visited_orphans = self._get_visited(list(orphaned_nodes), self.neighbor_list)
+                hopeful_orphans.extend(visited_orphans)
+                excluded_orphans = set(orphaned_nodes) - set(visited_orphans)
+                orphaned_connected_components.append(list(excluded_orphans))
+
+        for cc in orphaned_connected_components:
+            unfortunate_neighbor = random.choice(visited)
+            lucky_orphan = random.choice(cc)
+            self.neighbor_list[unfortunate_neighbor].append(lucky_orphan)
+            self.neighbor_list[lucky_orphan].append(unfortunate_neighbor)
+            self.edge_list.append((unfortunate_neighbor,lucky_orphan))
+
     def _classify(self):
         """
         You shouldn't need to call this method.  
