@@ -33,6 +33,12 @@ class GGraph(object):
         self._classify()
         return self.edge_list
 
+    def _get_edges(self,node):
+        """
+        Return a list of all edges that involve [node]
+        """
+        return filter(lambda x: node in x, self.edge_list)
+            
 
     def _make_network(self):
         """
