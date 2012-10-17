@@ -162,13 +162,15 @@ class GGraph(object):
                     new_nodes[node[1:]] = 'h' if random.random() < self.host_p else 's'
                 else:
                     new_nodes[node[1:]] = 'h'
-
-
         
         # map the new names onto the old edge_list
         for pair in self.edge_list:
-          new_pair = map(lambda x: new_nodes[x[1:]] + x[1:], pair)
-          new_edge_list.append(new_pair)
+            new_pair = map(lambda x: new_nodes[x[1:]] + x[1:], pair)
+            new_edge_list.append(new_pair)
+        
+        # clean up -- no connected hosts
+        new_edge_list = filter(lambda x: not (x[0][:1] == x[1][:1] == 'h'), new_edge_list)
+ 
 
         return new_edge_list
 
