@@ -138,9 +138,27 @@ class GGraph(object):
         either be a host or a switch (though we do enforce that there must be a
         minimum of two hosts in the network)
         """
-
+        new_nodes = {}
+        new_edge_list = []
         k = kruskal.Kruskal(self.nodes, self.edge_list)
         mst_edges = k.run()
+        for node in self.nodes:
+            graph_edges = self._get_edges(node,self.edge_list)
+            mst_edges = self._get_edges(node,mst_edges)
+            # if the set of edges in G is the same as those in M for 
+            # a given node, then we set that node to be a switch.
+            # else, with probability [host_p] we set it to be a host (default is switch)
+            if self._edge_set_equal(graph_edges, mst_edges):
+                new_nodes[node[1:]] = 's'
+            else:
+                new_nodes[node[1:]] = 'h' if random.random > self.host_p else 's'
+        
+        # map the new names onto the old edge_list
+        for pair in self.edge_list:
+          new_pair = map(lambda x: new_nodes[x[1:]] + x[1:], pair)
+          new_edge_list.append(new_pair)
+
+        return new_edge_list
 
     def show(self, filename=''):
         """
