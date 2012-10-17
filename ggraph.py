@@ -147,7 +147,9 @@ class GGraph(object):
         new_edge_list = []
         k = kruskal.Kruskal(self.nodes, self.edge_list)
         mst_edges = k.run()
-        for node in self.nodes:
+        cur_nodes = self.nodes
+        random.shuffle(cur_nodes)
+        for node in cur_nodes:
             graph_edges = self._get_edges(node,self.edge_list)
             mst_edges = self._get_edges(node,mst_edges)
             # if the set of edges in G is the same as those in M for 
@@ -156,7 +158,12 @@ class GGraph(object):
             if self._edge_set_equal(graph_edges, mst_edges):
                 new_nodes[node[1:]] = 's'
             else:
-                new_nodes[node[1:]] = 'h' if random.random() < self.host_p else 's'
+                if len(filter(lambda x: x.startswith('h'), new_nodes.values())) >= 2:
+                    new_nodes[node[1:]] = 'h' if random.random() < self.host_p else 's'
+                else:
+                    new_nodes[node[1:]] = 'h'
+
+
         
         # map the new names onto the old edge_list
         for pair in self.edge_list:
