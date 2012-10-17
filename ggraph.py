@@ -79,8 +79,7 @@ class GGraph(object):
 
         k = kruskal.Kruskal(self.nodes, self.edge_list)
         mst_edges = k.run()
-        k.show('2.png')
-    
+
     def show(self, filename=''):
         """
         Uses the networkx/matplotlib.pyplot modules to graphically show what network
