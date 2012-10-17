@@ -4,8 +4,6 @@ import itertools
 from collections import defaultdict
 from collections import deque
 
-import kruskal
-
 class GGraph(object):
     """
     Class encapsulating the necessary functionality for creating arbitrarily-sized, undirected, connected
