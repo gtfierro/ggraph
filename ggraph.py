@@ -2,6 +2,7 @@ import sys
 import random
 import itertools
 from collections import defaultdict
+from collections import deque
 
 import kruskal
 
@@ -38,7 +39,23 @@ class GGraph(object):
         Return a list of all edges that involve [node]
         """
         return filter(lambda x: node in x, self.edge_list)
-            
+    
+    def _get_visited(self, nodes, neighbor_list):
+        """
+        Given a graph described by [nodes] and [neighbor_list],
+        return a list of the nodes visited via DFS
+        """
+        first = random.choice(nodes)
+        tovisit = deque()
+        visited = []
+        for neighbor in neighbor_list[first]:
+            tovisit.appendleft(neighbor)
+        while tovisit:
+            current = tovisit.pop()
+            visited.append(current)
+            for neighbor in filter(lambda x: x not in visited, neighbor_list[current]):
+                tovisit.appendleft(neighbor)
+        return visited
 
     def _make_network(self):
         """
